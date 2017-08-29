@@ -78,9 +78,9 @@ use App\Entity\Member;
 //Route::get('query3', 'StudentController@query3');
 //Route::get('query4', 'StudentController@query4');
 
-Route::get('/', function() {
-    return view('login');
-});
+Route::get('/login', 'View\MemberController@toLogin');
+
+Route::get('/register', 'View\MemberController@toRegister');
 
 Route::any('service/validate_code/create', 'Service\ValidateController@create');
 
