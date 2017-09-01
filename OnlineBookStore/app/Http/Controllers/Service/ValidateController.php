@@ -15,7 +15,8 @@ class ValidateController extends Controller {
         $validateCode->doimg();
     }
 
-    public function sendSMS(Request $request) {
+    public function sendSMS(Request $request)
+    {
         $m3_result = new M3Result;
 
         $phone = $request->input('phone', '');

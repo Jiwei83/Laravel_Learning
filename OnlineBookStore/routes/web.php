@@ -12,6 +12,7 @@
 */
 
 use App\Entity\Member;
+use App\Tool\SMS\SendTemplateSMS;
 //
 ////Route::get('/', function () {
 ////    return view('welcome');
@@ -85,6 +86,8 @@ Route::get('/register', 'View\MemberController@toRegister');
 Route::any('service/validate_code/create', 'Service\ValidateController@create');
 
 Route::any('service/validate_phone/send', 'Service\ValidateController@sendSMS');
+
+Route::any('service/register', 'Service\MemberController@register');
 
 
 
