@@ -13,6 +13,8 @@
 
 use App\Entity\Member;
 use App\Tool\SMS\SendTemplateSMS;
+use App\Mail\Test;
+use Illuminate\Support\Facades\DB;
 //
 ////Route::get('/', function () {
 ////    return view('welcome');
@@ -81,7 +83,7 @@ use App\Tool\SMS\SendTemplateSMS;
 
 Route::get('/login', 'View\MemberController@toLogin');
 
-Route::get('/register', 'View\MemberController@toRegister');
+Route::any('/register', 'View\MemberController@toRegister');
 
 Route::any('service/validate_code/create', 'Service\ValidateController@create');
 
@@ -89,7 +91,7 @@ Route::any('service/validate_phone/send', 'Service\ValidateController@sendSMS');
 
 Route::any('service/register', 'Service\MemberController@register');
 
-
+Route::any('/service/validate_email', 'Service\ValidateController@validateEmail');
 
 
 

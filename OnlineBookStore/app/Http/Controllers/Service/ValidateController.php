@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Service;
 
+use App\Entity\Member;
+use App\Entity\TempEmail;
 use App\Http\Controllers\Controller;
 use App\Tool\Validate\ValidateCode;
 use App\Tool\SMS\SendTemplateSMS;
@@ -10,8 +12,9 @@ use Illuminate\Http\Request;
 use App\Models\M3Result;
 
 class ValidateController extends Controller {
-    public function create() {
+    public function create(Request $request) {
         $validateCode = new ValidateCode();
+        $request->session()->put('validate_code', $validateCode->getCode());
         $validateCode->doimg();
     }
 
@@ -51,6 +54,33 @@ class ValidateController extends Controller {
         }
 
         return $m3_result->toJson();
+    }
+
+    public function validateEmail(Request $request) {
+        $member_id = $request->input('member_id');
+        $code = $request->input('code');
+        $tempEmail = TempEmail::where('member_id', $member_id)->first();
+        $deadline = $tempEmail->deadline;
+        if($member_id == '' || $code == '') {
+            return 'Error';
+        }
+        if($tempEmail == null) {
+            return 'Error';
+        }
+        if($tempEmail->code == $code) {
+            if(time() > strtotime($deadline)) {
+                return 'Validate link expires';
+            }
+            else {
+                $member = Member::find($member_id);
+                $member->active = 1;
+                $member->save();
+                return redirect('/login');
+            }
+        }
+        else {
+            return 'Validate link expires';
+        }
     }
 }
 
