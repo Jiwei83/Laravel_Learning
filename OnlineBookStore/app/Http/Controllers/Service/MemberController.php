@@ -101,7 +101,6 @@ class MemberController extends Controller {
             $uuid = UUID::create();
             $m3_email = new M3Email;
             $m3_email->to = $email;
-            $m3_email->cc = '2434747896@qq.com';
             $m3_email->subject = 'Online Book Store Register Validation';
             $m3_email->content = 'Please validate your email within 24 hours through
                         this link: http://127.0.0.1:8000/service/validate_email'
@@ -120,6 +119,44 @@ class MemberController extends Controller {
             $m3_result->message = 'Succeed';
             return $m3_result->toJson();
         }
+    }
+
+    public function login(Request $request) {
+        $username = $request->input('username', '');
+        $password = $request->input('password', '');
+        $validate_code = $request->input('validate_code', '');
+        $validate_code_session = $request->session()->get('validate_code');
+        $m3_result = new M3Result;
+
+        if($validate_code != $validate_code_session) {
+            $m3_result->status = 1;
+            $m3_result->message = 'Validate code incorrect';
+            return $m3_result->toJson();
+        }
+
+        if(strpos($username, '@') == true) {
+            $member = Member::where('email', $username)->first();
+        }
+        else {
+            $member = Member::where('phone', $username)->first();
+        }
+
+        if($member == null) {
+            $m3_result->status = 2;
+            $m3_result->message = 'Invalid username';
+            return $m3_result->toJson();
+        }
+        else {
+            if(md5('bk' . $password) != $member->password) {
+                $m3_result->status = 3;
+                $m3_result->message = 'Invalid password';
+                return $m3_result->toJson();
+            }
+        }
+        $request->session()->put('member', $member);
+        $m3_result->status = 0;
+        $m3_result->message = 'Succeed';
+        return $m3_result->toJson();
     }
 }
 

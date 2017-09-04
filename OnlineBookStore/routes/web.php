@@ -83,15 +83,24 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('/login', 'View\MemberController@toLogin');
 
-Route::any('/register', 'View\MemberController@toRegister');
+Route::get('/register', 'View\MemberController@toRegister');
 
-Route::any('service/validate_code/create', 'Service\ValidateController@create');
+Route::get('/category', 'View\BookController@toCategory');
 
-Route::any('service/validate_phone/send', 'Service\ValidateController@sendSMS');
+Route::get('/product/category_id/{category_id}', 'View\BookController@toProduct');
 
-Route::any('service/register', 'Service\MemberController@register');
+Route::group(['prefix' => 'service'], function(){
+    Route::get('validate_code/create', 'Service\ValidateController@create');
+    Route::post('validate_phone/send', 'Service\ValidateController@sendSMS');
+    Route::post('validate_email', 'Service\ValidateController@validateEmail');
+    Route::post('login', 'Service\MemberController@login');
+    Route::post('register', 'Service\MemberController@register');
+    Route::get('category/parent_id/{parent_id}', 'Service\BookController@getCategoryByParentId');
+    Route::get('');
+});
 
-Route::any('/service/validate_email', 'Service\ValidateController@validateEmail');
+
+
 
 
 
