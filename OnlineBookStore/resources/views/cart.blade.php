@@ -55,6 +55,12 @@
                 $(this).next().addClass('weui_icon_checked');
             }
         });
+
+        function _toCharge() {
+            var cart_item_arr = '';
+            location.href = '/order_pay?cart_item_ids=' + cart_item_arr;
+        }
+
         function _onDelete() {
             var product_ids_arr = [];
             $('input:checkbox[name=cart_item]').each(function(index, el) {

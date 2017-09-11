@@ -12,6 +12,7 @@ use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\PdtContent;
 use App\Entity\PdtImages;
+use App\Entity\CartItem;
 use Illuminate\Http\Request;
 
 class BookController extends Controller {
@@ -33,6 +34,18 @@ class BookController extends Controller {
         $bk_cart = $request->cookie('bk_cart');
         $bk_cart_arr = ($bk_cart!=null ? explode(',', $bk_cart) : array());
         $count = 0;
+
+        $member = $request->session()->get('member', '');
+        if($member != '') {
+            $cart_items = CartItem::where('member_id', $member->id)->get();
+            foreach ($cart_items as $cart_item) {
+                if ($product_id == $cart_item->product_id) {
+                    $count = $cart_item->count;
+                    break;
+                }
+            }
+        }
+
         foreach ($bk_cart_arr as &$value) { //&为添加引用即可改变数组内的值
             $index = strpos($value, ':');
             if(substr($value, 0, $index) == $product_id) {

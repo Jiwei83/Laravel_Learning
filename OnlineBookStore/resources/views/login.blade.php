@@ -119,7 +119,7 @@
                     setTimeout(function () {
                         $('.bk_toptips').hide();
                     }, 2000);
-                    location.href='/category';
+                    location.href = '{{$return_url}}';
                 },
                 error: function (xhr, status, error) {
                     console.log(xhr);

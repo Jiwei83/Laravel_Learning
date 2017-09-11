@@ -91,12 +91,13 @@ Route::get('/product/category_id/{category_id}', 'View\BookController@toProduct'
 
 Route::get('/product/product_id/{product_id}', 'View\BookController@toPdtContent');
 
-Route::get('/cart', ['middleware'=>'check.login', 'uses'=>'View\CartController@toCart']);
+//Route::get('/cart', ['middleware'=>'check.login', 'uses'=>'View\CartController@toCart']);
 
 //路由组来管理具有相同中间件的路由
-//Route::group(['middleware' => 'check.login'], function() {
-//    Route::get('/cart', 'View\CartController@toCart');
-//});
+Route::group(['middleware' => 'check.login'], function() {
+    Route::get('/cart', 'View\CartController@toCart');
+    Route::get('/order_pay', 'View\OrderController@toOrderPay');
+});
 
 Route::group(['prefix' => 'service'], function(){
     Route::get('validate_code/create', 'Service\ValidateController@create');
@@ -107,6 +108,20 @@ Route::group(['prefix' => 'service'], function(){
     Route::get('category/parent_id/{parent_id}', 'Service\BookController@getCategoryByParentId');
     Route::get('cart/add/{product_id}', 'Service\CartController@addCart');
     Route::get('cart/deleteCart', 'Service\CartController@deleteCart');
+});
+
+Route::group(['prefix' => 'admin'], function() {
+    Route::group(['prefix' => 'service'], function() {
+        Route::post('login', 'Admin\indexController@login');
+        Route::post('category/add', 'Admin\indexController@categoryAdd');
+        Route::post('category/delete', 'Admin\indexController@categoryDelete');
+        Route::post('category/edit', 'Admin\indexController@categoryEdit');
+    });
+    Route::get('index', 'Admin\indexController@toIndex');
+    Route::get('category', 'Admin\indexController@toCategory');
+    Route::get('login', 'Admin\indexController@toLogin');
+    Route::get('category_add', 'Admin\indexController@toCategoryAdd');
+    Route::get('category_edit', 'Admin\indexController@toCategoryEdit');
 });
 
 
